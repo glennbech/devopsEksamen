@@ -1,8 +1,11 @@
 resource "aws_apprunner_service" "service" {
-  service_name = "kjell-is-king"
+  service_name = "${var.prefix}-apprunner"
+
 
   instance_configuration {
     instance_role_arn = aws_iam_role.role_for_apprunner_service.arn
+    cpu = 256
+    memory = 1024
   }
 
   source_configuration {
@@ -11,9 +14,9 @@ resource "aws_apprunner_service" "service" {
     }
     image_repository {
       image_configuration {
-        port = "8080"
+        port = var.port
       }
-      image_identifier      = "244530008913.dkr.ecr.eu-west-1.amazonaws.com/kjell:latest"
+      image_identifier      = var.image
       image_repository_type = "ECR"
     }
     auto_deployments_enabled = true
@@ -21,7 +24,7 @@ resource "aws_apprunner_service" "service" {
 }
 
 resource "aws_iam_role" "role_for_apprunner_service" {
-  name               = "kjell-role-thingy"
+  name               = "ApprunnerS3RekognitionCWAccessRole"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -39,13 +42,21 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+
+
+resource "aws_iam_policy" "policy" {
+  name        = "RekognitionImageRolePolicy"
+  description = "Policy for apprunner instance to use rekognition, cloudwatch and S3 bucket"
+  policy      = data.aws_iam_policy_document.policy.json
+}
+
 data "aws_iam_policy_document" "policy" {
   statement {
     effect    = "Allow"
     actions   = ["rekognition:*"]
     resources = ["*"]
   }
-  
+
   statement  {
     effect    = "Allow"
     actions   = ["s3:*"]
@@ -58,13 +69,6 @@ data "aws_iam_policy_document" "policy" {
     resources = ["*"]
   }
 }
-
-resource "aws_iam_policy" "policy" {
-  name        = "kjell-apr-policy-thingy"
-  description = "Policy for apprunner instance I think"
-  policy      = data.aws_iam_policy_document.policy.json
-}
-
 
 resource "aws_iam_role_policy_attachment" "attachment" {
   role       = aws_iam_role.role_for_apprunner_service.name
