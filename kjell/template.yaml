@@ -16,7 +16,7 @@ Parameters:
     Description: image bucket for PPE recognition
   ApiPath:
     Type: String
-    Default: /check
+    Default: "/check"
 
 
 
