@@ -39,3 +39,10 @@ du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmligeter  
 docker build -t kjellpy .
 docker run -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=kjellsimagebucket kjellpy
 ```
+
+## OPPGAVE 2 A
+Dockerfilen ligger i root folder
+du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmligeter  og bilde s3 bucket
+``` 
+docker build -t ppe .
+docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=kjellsimagebucket ppe```

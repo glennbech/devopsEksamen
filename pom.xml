@@ -49,10 +49,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
                 <configuration>
                     <mainClass>com.example.s3rekognition.S3RekognitionApplication</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <configuration>
+                    <fork>false</fork>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
