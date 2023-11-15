@@ -3,8 +3,8 @@ on:
     branches:
       - main
 env:
-  S3_IMAGE_BUCKET: kandidat-2012 # this needs to be empty if recreating
-  STACK_NAME: sam-id-2012
+  S3_IMAGE_BUCKET: kandidat-id-2012 # this needs to be empty if recreating
+  STACK_NAME: sam-kandidat-id-2012
 defaults:
   run:
     working-directory: ./kjell
