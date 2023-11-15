@@ -62,7 +62,7 @@ Resources:
               - 'sts:AssumeRole'
       Path: "/"
       Policies:
-        - PolicyName: rekon
+        - PolicyName: rekognition
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
