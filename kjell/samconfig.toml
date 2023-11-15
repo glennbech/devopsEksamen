@@ -1,6 +1,5 @@
 version = 0.1
 [default.deploy.parameters]
-stack_name = "sam-id-2012"
 resolve_s3 = true
 s3_prefix = "sam-id-2012"
 region = "eu-west-1"
@@ -8,5 +7,5 @@ confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 disable_rollback = true
 image_repositories = []
-parameter_overrides = "s3Bucket=\"kandidat-2012\""
+
 
