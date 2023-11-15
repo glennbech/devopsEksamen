@@ -3,3 +3,6 @@
 /kjell/.aws-sam/**
 /kjell/.aws-sam/
 /target/
+
+/infra/.terraform/
+/infra/.terraform.lock.hcl
