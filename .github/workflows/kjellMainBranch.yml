@@ -2,7 +2,8 @@ on:
   push:
     branches:
       - main
-
+env:
+  S3_IMAGE_BUCKET: kandidat-2012
 defaults:
   run:
     working-directory: ./kjell
@@ -20,4 +21,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
       - run: sam build --use-container
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+      - run: sam deploy --parameter-overrides s3Bucket=$S3_IMAGE_BUCKET --no-confirm-changeset --no-fail-on-empty-changeset
