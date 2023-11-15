@@ -11,16 +11,16 @@ jobs:
   build_docker_image:
     name: Push Docker image to ECR
     runs-on: ubuntu-latest
-    uses: actions/checkout@v3
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
+
       - name: Build Docker Image
         run: |
           docker build . -t ppe2012
       - name: Check out the repo
-        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/checkout@v3
 
+      - name: Build and push Docker image
+        if: ${{ github.ref == 'refs/heads/master' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -33,3 +33,4 @@ jobs:
           docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
 
   
+
