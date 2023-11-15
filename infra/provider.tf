@@ -9,9 +9,12 @@ terraform {
   // trenges for å ikke lagres lokalt eller på github under github actions
   backend "s3" {
     bucket = "kandidat-id-2012"
-    key    = "bjne002/apprunner-a-new-state.state"
+    key    = "kandidat-id-2012/apprunner-a-new-state.state"
     region = "eu-west-1"
   }
+
+
+}
 
 
 }
