@@ -1,0 +1,39 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - '*'
+      - '*/*'
+      - '**'
+
+jobs:
+  build_docker_image:
+    name: Push Docker image to ECR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Build Docker Image
+        run: |
+          docker build . -t ppe2012
+
+  publish_docker_image:
+        name: Push Docker image to ECR
+        runs-on: ubuntu-latest
+        needs: build_docker_image
+        if: github.ref == 'refs/heads/main'
+        steps:
+          - name: Check out the repo
+            uses: actions/checkout@v3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
+          rev=$(git rev-parse --short HEAD)
+          docker tag ppe2012 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:$rev
+          docker tag ppe2012 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
+          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:$rev
+          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
+
