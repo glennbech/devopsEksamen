@@ -1,0 +1,75 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - '*'
+      - '*/*'
+      - '**'
+
+jobs:
+  build_docker_image:
+    name: Push Docker image to ECR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Build Docker Image
+        run: |
+          docker build . -t ppe2012
+
+      - name: Build and push Docker image
+        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
+          rev=$(git rev-parse --short HEAD)
+          docker tag ppe2012 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:$rev
+          docker tag ppe2012 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
+          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:$rev
+          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
+
+  terraform:
+    name: "Terraform"
+    needs: build_docker_image
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: eu-west-1
+      IMAGE: 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
+      PREFIX: VerneVokterne-id-2012
+      PORT: 8080
+    #    TF_LOG: trace
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./infra
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./infra
+        run: terraform plan   -var="prefix=$PREFIX" -var="image=$IMAGE"  -var="port=$PORT" -no-color
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        working-directory: ./infra
+        run: exit 1
+
+      - name: Terraform Apply
+        working-directory: ./infra
+
+        run: terraform apply -var="prefix=$PREFIX" -var="image=$IMAGE"  -var="port=$PORT" -auto-approve
+
+  
+
