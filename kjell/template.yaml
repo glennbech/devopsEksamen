@@ -14,7 +14,10 @@ Parameters:
   s3Bucket:
     Type: String
     Description: image bucket for PPE recognition
-    Default: kandidat-2012
+  ApiPath:
+    Type: String
+    Default: /check
+
 
 
 Resources:
@@ -43,7 +46,7 @@ Resources:
         CheckForPPE:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /check
+            Path: !Ref ApiPath
             Method: get
   LambdaS3RecognitionRole:
     Type: 'AWS::IAM::Role'
@@ -83,7 +86,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   CheckForPPEApi:
     Description: "API Gateway endpoint URL for Prod stage for PPE Scanner function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/check/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod${ApiPath}/"
   PPEScannerFunction:
     Description: "PPE Scanner  Lambda Function ARN"
     Value: !GetAtt PPEScannerFunction.Arn
