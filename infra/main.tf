@@ -72,6 +72,7 @@ data "aws_iam_policy_document" "policy" {
   statement {
     Effect =  "Allow"
     Action= ["apprunner:UpdateService","apprunner:DescribeService"]
+    resources = ["*"]
   }
 }
 
