@@ -5,6 +5,7 @@ on:
 env:
   S3_IMAGE_BUCKET: kandidat-id-2012 # this needs to be empty if recreating
   STACK_NAME: sam-kandidat-id-2012
+  S3_ARTIFACT: pgr301-sam-bucket
 defaults:
   run:
     working-directory: ./kjell
@@ -22,4 +23,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
       - run: sam build  --use-container
-      - run: sam deploy --stack-name ${{ env.STACK_NAME }} --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides s3Bucket=${{ env.S3_IMAGE_BUCKET }}
+      - run: sam deploy --stack-name ${{ env.STACK_NAME }} --s3-bucket ${{ env.SS3_ARTIFACT }} --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides s3Bucket=${{ env.S3_IMAGE_BUCKET }}
