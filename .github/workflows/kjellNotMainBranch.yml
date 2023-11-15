@@ -5,6 +5,7 @@ on:
       - '*/*'
       - '**'
       - '!master'   # excludes master
+      - '!main'   # excludes main
 
 defaults:
   run:
