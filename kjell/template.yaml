@@ -5,34 +5,79 @@ Description: >
 
   Sample SAM Template for kjell
 
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 60
     MemorySize: 512
 
+Parameters:
+  s3Bucket:
+    Type: String
+    Description: image bucket for PPE reconition
+    Default: kandidat-2012
+
+
 Resources:
 
   Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: "kjellsimgebucket"
+      BucketName: !Ref s3Bucket
+
+
   HelloWorldFunction:
+    DependsOn: Bucket
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
+      Role: !GetAtt LambdaRole.Arn
       Runtime: python3.9
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref s3Bucket
       Architectures:
         - x86_64
-      Policies:
-        - AmazonRekognitionFullAccess
+
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /hello
             Method: get
+  LambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: "/"
+      Policies:
+        - PolicyName: rekon
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 'rekognition:*'
+                Resource: '*'
+        - PolicyName: s3
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:*'
+                  - 's3-object-lambda:*'
+                Resource:
+                  - "*"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -46,4 +91,4 @@ Outputs:
     Value: !GetAtt HelloWorldFunction.Arn
   HelloWorldFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt LambdaRole.Arn
