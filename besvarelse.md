@@ -14,7 +14,7 @@ Sensoren må lage en kopi (fork) av følgende repository: https://github.com/fre
 ### AWS
 Sensoren må logge inn på AWS-kontoen, navigere til IAM, deretter til "users", gå inn på sin bruker og velge "Create access key". Deretter velger man CLI, gir nøkkelen et navn og kopierer verdiene for Access key og Secret access key. Se vedlagt bilde av en gammel og deaktivert nøkkel
 ![aws_key_val.png](..%2F..%2F..%2FUsers%2Fbjart%2FDesktop%2Faws_key_val.png)
-isse verdiene skal legges inn i GitHub Action secrets, som vil bli forklart nærmere nedenfor. Pass på å ikke lukke denne siden før du har lagt inn verdiene i GitHub.
+isse verdiene skal legges inn i GitHub Action secrets, som vil bli forklart nærmere nedenfor. Pass på å ikke lukke denne siden før du har lagt inn verdiene i GitHug og i cmd i oppgave1 B
 
 ### Github
 Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions.  
@@ -33,3 +33,9 @@ STACK_NAME: for å endre hva SAM(Lamda funksjonen) skal hete
 Det er ikke nødvendig å gjøre endringer i workflows-filene for å teste workflow mot andre grener. For å teste, trenger man kun å opprette en ny gren og pushe den til GitHub.
 
 ## OPPAGAVE 1 B
+Filen ligger i mappen Kjell/ppe_check siden jeg valgte å rename alt til å bedre stemme med funksjonalitet
+du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmligeter  og bilde s3 bucket
+```
+docker build -t kjellpy .
+docker run -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=kjellsimagebucket kjellpy
+```
