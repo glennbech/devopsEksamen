@@ -12,12 +12,11 @@ jobs:
     name: Push Docker image to ECR
     runs-on: ubuntu-latest
     steps:
-
+      - name: Check out the repo
+        uses: actions/checkout@v3
       - name: Build Docker Image
         run: |
           docker build . -t ppe2012
-      - name: Check out the repo
-        uses: actions/checkout@v3
 
       - name: Build and push Docker image
         if: ${{ github.ref == 'refs/heads/master' }}
