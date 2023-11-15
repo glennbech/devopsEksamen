@@ -3,8 +3,8 @@ resource "aws_apprunner_service" "service" {
 
 
   instance_configuration {
-    cpu                   = "256"
-    memory                = "1024"
+    cpu                   = "1024"
+    memory                = "2048"
     instance_role_arn = aws_iam_role.role_for_apprunner_service.arn
 
   }
@@ -14,11 +14,13 @@ resource "aws_apprunner_service" "service" {
       access_role_arn = "arn:aws:iam::244530008913:role/service-role/AppRunnerECRAccessRole"
     }
     image_repository {
+
       image_configuration {
         port = var.port
       }
       image_identifier      = var.image
       image_repository_type = "ECR"
+
     }
     auto_deployments_enabled = true
   }
