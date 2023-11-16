@@ -1,4 +1,6 @@
-package com.example.s3rekognition;
+package com.example.s3rekognition.model;
+
+import com.example.s3rekognition.model.PPEClassificationResponse;
 
 import java.io.Serializable;
 import java.util.List;
