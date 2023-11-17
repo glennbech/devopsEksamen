@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.s3rekognition.model.PPEClassificationResponse;
 import com.example.s3rekognition.model.PPEResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +22,15 @@ import java.util.logging.Logger;
 
 @RestController
 public class RekognitionController implements ApplicationListener<ApplicationReadyEvent> {
-
-    private final AmazonS3 s3Client;
-    private final AmazonRekognition rekognitionClient;
+    @Autowired
+    private AmazonS3 s3Client;
+    @Autowired
+    private AmazonRekognition rekognitionClient;
 
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
-    public RekognitionController() {
-        this.s3Client = AmazonS3ClientBuilder.standard().build();
-        this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
-    }
+
+
 
     /**
      * This endpoint takes an S3 bucket name in as an argument, scans all the
