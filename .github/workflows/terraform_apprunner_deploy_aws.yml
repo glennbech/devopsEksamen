@@ -88,6 +88,7 @@ jobs:
            
 
   build_docker_image:
+    needs: copy_files_to_s3_bucket
     name: Push Docker image to ECR
     runs-on: ubuntu-latest
     steps:
@@ -113,9 +114,8 @@ jobs:
 
   terraform:
     name: "Terraform"
-    needs:
-     - build_docker_image
-     - copy_files_to_s3_bucket
+    needs: build_docker_image
+
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     env:
