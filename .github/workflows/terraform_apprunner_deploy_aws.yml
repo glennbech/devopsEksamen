@@ -30,7 +30,7 @@ jobs:
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           rev=$(git rev-parse --short HEAD)
           docker tag ppe2012 ${{ env.IMAGE_CONTAINER }}:$rev
-          docker tag ppe2012 2${{ env.IMAGE_CONTAINER }}:latest
+          docker tag ppe2012 ${{ env.IMAGE_CONTAINER }}:latest
           docker push ${{ env.IMAGE_CONTAINER }}:$rev
           docker push ${{ env.IMAGE_CONTAINER }}:latest
 
