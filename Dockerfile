@@ -1,4 +1,4 @@
-FROM  3.9-amazoncorretto-17-al2023 as builder
+FROM  3.9-amazoncorretto-17 as builder
 COPY pom.xml .
 COPY src ./src
 RUN mvn package
