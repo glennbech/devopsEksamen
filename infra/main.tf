@@ -84,4 +84,11 @@ resource "aws_iam_role_policy_attachment" "attachment" {
   role       = aws_iam_role.role_for_apprunner_service.name
   policy_arn = aws_iam_policy.policy.arn
 }
+module "threshold_alarm" {
+  source = "./alarm_module"
+  email = var.email
+  prefix = var.prefix
+  metric_name = var.metric_name
+  threshold = var.threshold
 
+}
