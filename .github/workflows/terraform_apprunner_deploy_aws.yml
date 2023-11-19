@@ -42,7 +42,7 @@ jobs:
         if: steps.check-bucket.outputs.bucket_exists != 'true'
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3api create-bucket --region eu-west-1  --bucket $BUCKET_NAME 
+          aws s3api create-bucket --region eu-west-1  --bucket $BUCKET_NAME --object-ownership BucketOwnerEnforced
           aws s3api put-object --bucket $BUCKET_NAME --key camera/exit
           aws s3api put-object --bucket $BUCKET_NAME --key camera/entrance
           aws s3api put-object --bucket $BUCKET_NAME --key camera/private
