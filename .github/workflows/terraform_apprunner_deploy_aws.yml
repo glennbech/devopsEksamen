@@ -8,6 +8,8 @@ on:
       - '**'
 
 jobs:
+  env:
+    IMAGE: 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private
   build_docker_image:
     name: Push Docker image to ECR
     runs-on: ubuntu-latest
@@ -23,13 +25,14 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           rev=$(git rev-parse --short HEAD)
-          docker tag ppe2012 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:$rev
-          docker tag ppe2012 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
-          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:$rev
-          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
+          docker tag ppe2012 ${{ env.IMAGE }}:$rev
+          docker tag ppe2012 2${{ env.IMAGE }}:latest
+          docker push ${{ env.IMAGE }}:$rev
+          docker push ${{ env.IMAGE }}:latest
 
   terraform:
     name: "Terraform"
@@ -40,7 +43,6 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: eu-west-1
-      IMAGE: 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private:latest
       PREFIX: Student-Nr-2012
       PORT: 8080
       EMAIL: ${{ secrets.EMAIL }}
@@ -62,7 +64,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: ./infra
-        run: terraform plan -var="email=$EMAIL" -var="threshold=$THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=$IMAGE"  -var="port=$PORT" -no-color
+        run: terraform plan -var="email=$EMAIL" -var="threshold=$THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=${{ env.IMAGE }}"  -var="port=$PORT" -no-color
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -73,7 +75,7 @@ jobs:
       - name: Terraform Apply
         working-directory: ./infra
 
-        run: terraform apply -var="email=$EMAIL" -var="threshold=$THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=$IMAGE"  -var="port=$PORT" -auto-approve
+        run: terraform apply -var="email=$EMAIL" -var="threshold=$THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=${{ env.IMAGE }}"  -var="port=$PORT" -auto-approve
 
   
 
