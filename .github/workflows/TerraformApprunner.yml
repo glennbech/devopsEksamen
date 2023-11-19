@@ -15,8 +15,10 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Build Docker Image
+        env:
+          BUCKET_NAME: kandidat-id-2012
         run: |
-          docker build . -t ppe2012
+          docker build . -t ppe2012  -D spring-boot.run.arguments="--BUCKET_NAME=$BUCKET_NAME
 
       - name: Build and push Docker image
         if: ${{ github.ref == 'refs/heads/main' }}
