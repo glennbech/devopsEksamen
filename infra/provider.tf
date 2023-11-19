@@ -6,7 +6,7 @@ terraform {
     }
   }
 
-  // trenges for å ikke lagres lokalt eller på github under github actions
+
   backend "s3" {
     bucket = "kandidat-id-2012"
     key    = "kandidat-id-2012/apprunner-a-new-state.state"
