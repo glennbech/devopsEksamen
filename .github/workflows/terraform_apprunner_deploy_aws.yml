@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: Deploy Apprunner AWS Terraform
 
 on:
   push:
