@@ -113,7 +113,7 @@ hvis ingen er i bygget får du tilbake en streng med teksten "building is empty"
 For å gi bedriftene mer fleksibilitet så har jeg lagt på muligheten til å bestemme hvilken korppsdel den skal scanne for    
 værne utstyr. Da kan man sjekke om man har på seg hjelm i somme områder å ansikt beskyttelse i andre
 ```
-curl localhost:8080/scan-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>
+curl 'localhost:8080/scan-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
 ```
 ### Måling
 For å passe på det økonomiske så setter jeg på en alarm på kostnader her har jeg berre valgt en tilfeldig sum på 1000 per måned
