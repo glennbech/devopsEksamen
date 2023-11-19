@@ -73,19 +73,6 @@ resource "aws_cloudwatch_dashboard" "main" {
             }
         },
         {
-            "height": 3,
-            "width": 6,
-            "y": 6,
-            "x": 18,
-            "type": "alarm",
-            "properties": {
-                "title": "",
-                "alarms": [
-                    "arn:aws:cloudwatch:eu-west-1:244530008913:alarm:To many unathoriced atempts"
-                ]
-            }
-        },
-        {
             "height": 7,
             "width": 6,
             "y": 13,
