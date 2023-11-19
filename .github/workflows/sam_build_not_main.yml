@@ -1,3 +1,4 @@
+name: Build SAM
 on:
   push:
     branches:
