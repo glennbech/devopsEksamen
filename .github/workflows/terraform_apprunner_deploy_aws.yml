@@ -20,16 +20,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: your-aws-region
-
       - name: Check if Bucket Exists
-        id: check-bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+        
+          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           if aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
           echo "Bucket exists"
           echo "::set-output name=bucket_exists::true"
@@ -39,6 +36,9 @@ jobs:
           fi
 
       - name: Create S3 Bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         if: steps.check-bucket.outputs.bucket_exists != 'true'
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
@@ -53,7 +53,9 @@ jobs:
     needs: create_s3_image_bucket
     steps:
       - name: Check if Bucket Exists
-        id: check-bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           if aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
           echo "Bucket exists"
@@ -65,12 +67,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: your-aws-region
       - name: Check if S3 folder camera/pictures has images
         id: s3-check
         run: |
@@ -78,9 +74,13 @@ jobs:
           echo "::set-output name=object_count::$object_count"
 
       - name: Copy Images If Empty
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         if: ${{ steps.s3-check.outputs.object_count == '1' }}
         needs:
         run: |
+          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           aws s3 cp ./pictures s3://$BUCKET_NAME/camera/pictures --recursive
           aws s3 cp ./pictures/petter.jpg s3://$BUCKET_NAME/camera/employee/petter.jpg 
           aws s3 cp ./pictures/kari.jpg s3://$BUCKET_NAME/camera/pictures/kari.jpg 
@@ -113,7 +113,9 @@ jobs:
 
   terraform:
     name: "Terraform"
-    needs: [build_docker_image,copy_files_to_s3_bucket]
+    needs:
+     - build_docker_image
+     - copy_files_to_s3_bucket
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     env:
