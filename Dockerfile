@@ -1,4 +1,4 @@
-FROM maven:3.6-jdk-11  as builder
+FROM  eclipse-temurin:17-jdk as builder
 COPY pom.xml .
 COPY src ./src
 RUN mvn package
