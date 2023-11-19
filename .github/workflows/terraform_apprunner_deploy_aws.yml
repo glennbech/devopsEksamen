@@ -48,7 +48,7 @@ jobs:
       EMAIL: ${{ secrets.EMAIL }}
       ALARM_LOGIN_THRESHOLD: 2
       METRIC_NAME: unauthorized_scan_attempts.count
-      BUCKET_NAME:
+      BUCKET_NAME: kandidat-id-2012
 
     #    TF_LOG: trace
     steps:
