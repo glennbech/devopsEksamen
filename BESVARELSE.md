@@ -26,7 +26,13 @@ STACK_NAME - Denne må endres til unikt navn på SAM appen
 S3_ARTIFACT - Denne trenges kun å endres om sensor vill burke en annen bucket for SAM sin configurasjon
 
 for terraform_apprunner_deploy_aws.yml:
-
+IMAGE - if  he wants to change what docker image to use 
+AWS_REGION: eu-west-1
+PREFIX: Student-Nr-2012
+PORT: 8080
+EMAIL: ${{ secrets.EMAIL }}
+THRESHOLD: 2
+METRIC_NAME: unauthorized_scan_attempts.count
 
 ## OPPAGAVE 1 A
 
