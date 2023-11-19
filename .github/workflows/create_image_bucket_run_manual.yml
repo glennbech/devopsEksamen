@@ -1,4 +1,4 @@
-name: Apprunner AWS Terraform
+name: Run Create Bucket and Copy Images Manual
 
 on:
   workflow_dispatch:
