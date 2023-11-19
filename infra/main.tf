@@ -46,16 +46,20 @@ data "aws_iam_policy_document" "assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
-
-
-
+# add Policy to Role
+resource "aws_iam_role_policy_attachment" "attachment" {
+  role       = aws_iam_role.role_for_apprunner_service.name
+  policy_arn = aws_iam_policy.policy.arn
+}
+# Creete polcy using given polcy document
 resource "aws_iam_policy" "policy" {
   name        = "RekognitionImageRolePolicy"
   description = "Policy for apprunner instance to use rekognition, cloudwatch and S3 bucket"
-  policy      = data.aws_iam_policy_document.policy.json
+  policy      = data.aws_iam_policy_document.policy_document.json
 }
 
-data "aws_iam_policy_document" "policy" {
+# Create a Policy document whit given Permissions
+data "aws_iam_policy_document" "policy_document" {
   statement {
     effect    = "Allow"
     actions   = ["rekognition:*"]
@@ -73,17 +77,9 @@ data "aws_iam_policy_document" "policy" {
     actions   = ["cloudwatch:*"]
     resources = ["*"]
   }
-  statement {
-    effect    =  "Allow"
-    actions   = ["apprunner:*"]
-    resources = ["*"]
-  }
-}
 
-resource "aws_iam_role_policy_attachment" "attachment" {
-  role       = aws_iam_role.role_for_apprunner_service.name
-  policy_arn = aws_iam_policy.policy.arn
 }
+# Import local module from ./alarm_module
 module "threshold_alarm" {
   source = "./alarm_module"
   email = var.email

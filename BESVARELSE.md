@@ -1,12 +1,5 @@
 # BESVARELSE KANDIDAT 2012 DEVOPS EKSAMEN
-
-## OPPAGAVE 1 A
-Jeg valgte å endre navnet på mappen "hello_world" til "ppe_check" for å bedre reflektere hva applikasjonen gjør.
-I tillegg endret jeg sluttpunktet fra /hello til /check. 
-Det er også gjort andre tilpasninger i template-filen 
-for å tydeligere gjenspeile funksjonaliteten.
-
-### For at alt skal fungere med sensor
+## For at alt skal fungere med sensor  
 
 ### Git
 Sensoren må lage en kopi (fork) av følgende repository: https://github.com/freebattie/devopsEksamen
@@ -21,20 +14,41 @@ Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Se
 Her skal sensor lage til to secrets:  
 AWS_ACCESS_KEY_ID  
 AWS_SECRET_ACCESS_KEY  
+MAIL
 Under "Name" for det første legger du inn "AWS_ACCESS_KEY_ID", og verdien "Access key" fra AWS som "Secret". Deretter trykker du på "Add secret". Deretter oppretter du en til med "AWS_SECRET_ACCESS_KEY" som "Name", og "Secret access key" fra AWS som "Secret". Se
 ![github_secret.png](..%2F..%2F..%2FUsers%2Fbjart%2FDesktop%2Fgithub_secret.png)
+på mail så legger du inn mailen som du vill alarmen i oppgave 4 skal testes mot
 
-### Code
+### GitHub ACTION 
 
-For å teste workflow på hovedgrenen og lage sin egen SAM, må sensoren endre filen .github/workflows/kjellMainBranch.yml og justere følgende miljøvariabler:  
-S3_IMAGE_BUCKET: til ønsket bucket for å sjekke bilder.  
-STACK_NAME: for å endre hva SAM(Lamda funksjonen) skal hete  
+for sam_deploy_main.yml må følgendes endres:  
+S3_IMAGE_BUCKET - Her legger du inn hvor SAM skal hente bilder fra
+STACK_NAME - Denne må endres til unikt navn på SAM appen
+S3_ARTIFACT - Denne trenges kun å endres om sensor vill burke en annen bucket for SAM sin configurasjon
 
-Det er ikke nødvendig å gjøre endringer i workflows-filene for å teste workflow mot andre grener. For å teste, trenger man kun å opprette en ny gren og pushe den til GitHub.
+for terraform_apprunner_deploy_aws.yml:  
+IMAGE_CONTAINER - change if he wants to use his own aws ECR for storing docker images  
+AWS_REGION: eu-west-1 - change if he wants to use diffrent region  
+PREFIX: Student-Nr-2012 - change to a unique global name if he wants his own apprunner  
+PORT: 8080 - change if he need a diffrent port  
+ALARM_LOGIN_THRESHOLD: 2 - change if he wants to increase how many failed etempts is needed for image scanning   
+METRIC_NAME: unauthorized_scan_attempts.count - change if you want to use module to messure diffrent metric
+
+## OPPAGAVE 1 A
+
+jeg har endret  API kallet fra /hello til /check. 
+Det er også gjort andre tilpasninger i template-filen 
+for å tydeligere gjenspeile funksjonaliteten.
+Jeg har laget 2 work flows som heter sam_deploy_main.yml og sam_deploy_main.yml
+for sam_deploy_main.yml må følgendes endres:    
+S3_IMAGE_BUCKET - Her legger du inn hvor SAM skal hente bilder fra  
+STACK_NAME - Denne må endres til unikt navn på SAM appen  
+S3_ARTIFACT - Denne trenges kun å endres om sensor vill burke en annen bucket for SAM sin configurasjon  
+sam_deploy_not_main.yml trenges ingen ting å endres  
 
 ## OPPAGAVE 1 B
-Filen ligger i mappen Kjell/ppe_check siden jeg valgte å rename alt til å bedre stemme med funksjonalitet
-du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmligeter  og bilde s3 bucket
+Filen ligger i mappen Kjell/hello_world, ga den først et nytt navn men skfitet tilbake i tilfelle automatiske tester  
+du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmligeter  og s3 bucket med bilder
 ```
 docker build -t kjellpy .
 docker run -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=kjellsimagebucket kjellpy
@@ -51,10 +65,7 @@ docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e
 mitt ECR er student2012-private
 
 ## OPPGAVE 3 A
-variabler så velger jeg å lage til for image, prefix og port
-Port er satt til default 8080, med mulig het til å endre om det trengs
-prefix er for service navne 
-image er for docker image
+ 
 
 ## OPPGAVE 4
 mapper i s3 bucket:
@@ -101,7 +112,9 @@ hvis ingen er i bygget får du tilbake en streng med teksten "building is empty"
 ### Funcsjonalitet RekognitionController
 For å gi bedriftene mer fleksibilitet så har jeg lagt på muligheten til å bestemme hvilken korppsdel den skal scanne for    
 værne utstyr. Da kan man sjekke om man har på seg hjelm i somme områder å ansikt beskyttelse i andre
-
+```
+curl 'localhost:8080/scan-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
+```
 ### Måling
 For å passe på det økonomiske så setter jeg på en alarm på kostnader her har jeg berre valgt en tilfeldig sum på 1000 per måned
 Dette må du da justere inn i forlhold til hva du annser som normal forbruk
