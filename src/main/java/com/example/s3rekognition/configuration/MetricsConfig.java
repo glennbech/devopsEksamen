@@ -2,6 +2,7 @@ package com.example.s3rekognition.configuration;
 
 import io.micrometer.cloudwatch2.CloudWatchConfig;
 import io.micrometer.cloudwatch2.CloudWatchMeterRegistry;
+import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,7 @@ public class MetricsConfig {
                         Clock.SYSTEM,
                         cloudWatchAsyncClient());
     }
+
 
     private CloudWatchConfig setupCloudWatchConfig() {
         return new CloudWatchConfig() {
