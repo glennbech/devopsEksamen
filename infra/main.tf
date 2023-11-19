@@ -73,11 +73,7 @@ data "aws_iam_policy_document" "policy" {
     actions   = ["cloudwatch:*"]
     resources = ["*"]
   }
-  statement {
-    effect    =  "Allow"
-    actions   = ["apprunner:*"]
-    resources = ["*"]
-  }
+
 }
 
 resource "aws_iam_role_policy_attachment" "attachment" {
