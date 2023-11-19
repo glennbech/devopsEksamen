@@ -42,7 +42,7 @@ jobs:
         if: steps.check-bucket.outputs.bucket_exists != 'true'
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3api create-bucket --bucket $BUCKET_NAME --region eu-west-1  
+          aws s3api create-bucket --region eu-west-1  --bucket $BUCKET_NAME 
           aws s3api put-object --bucket $BUCKET_NAME --key camera/exit
           aws s3api put-object --bucket $BUCKET_NAME --key camera/entrance
           aws s3api put-object --bucket $BUCKET_NAME --key camera/private
@@ -57,7 +57,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          if aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
+          if aws s3api head-bucket --region eu-west-1  --bucket $BUCKET_NAME 2>/dev/null; then
           echo "Bucket exists"
           echo "::set-output name=bucket_exists::true"
           else
@@ -70,7 +70,7 @@ jobs:
       - name: Check if S3 folder camera/pictures has images
         id: s3-check
         run: |
-          object_count=$(aws s3 ls s3://$BUCKET_NAME/camera/pictures/ | wc -l)
+          object_count=$(aws s3 --region eu-west-1  ls s3://$BUCKET_NAME/camera/pictures/ | wc -l)
           echo "::set-output name=object_count::$object_count"
 
       - name: Copy Images If Empty
@@ -80,10 +80,10 @@ jobs:
         if: ${{ steps.s3-check.outputs.object_count == '1' }}
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3 cp ./pictures s3://$BUCKET_NAME/camera/pictures --recursive
-          aws s3 cp ./pictures/petter.jpg s3://$BUCKET_NAME/camera/employee/petter.jpg 
-          aws s3 cp ./pictures/kari.jpg s3://$BUCKET_NAME/camera/pictures/kari.jpg 
-          aws s3 cp ./pictures/stine.jpg s3://$BUCKET_NAME/camera/pictures/stine.jpg 
+          aws s3 cp --region eu-west-1   ./pictures s3://$BUCKET_NAME/camera/pictures --recursive
+          aws s3 cp --region eu-west-1   ./pictures/petter.jpg s3://$BUCKET_NAME/camera/employee/petter.jpg 
+          aws s3 cp --region eu-west-1  ./pictures/kari.jpg s3://$BUCKET_NAME/camera/pictures/kari.jpg 
+          aws s3 cp --region eu-west-1  ./pictures/stine.jpg s3://$BUCKET_NAME/camera/pictures/stine.jpg 
            
 
   build_docker_image:
