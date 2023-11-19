@@ -29,10 +29,10 @@ jobs:
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           if aws s3api head-bucket --region eu-west-1  --bucket $BUCKET_NAME 2>/dev/null; then
           echo "Bucket exists"
-          echo "::set-output name={bucket_exists}::{true}"
+          echo "::{bucket_exists}={true}" >> $GITHUB_OUTPUT
           else
           echo "Bucket does not exist"
-          echo "::set-output name={bucket_exists}::{false}"
+          echo "{bucket_exists}={false}" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Image Bucket and folders
