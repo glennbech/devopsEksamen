@@ -30,7 +30,8 @@ public class PPEScannerServiceImp implements PPEScannerService, ApplicationListe
     @Autowired
     private MeterRegistry meterRegistry;
     private String activeBodyCover;
-    private String activeBody;
+    private String activeBody = "";
+    private String activeBodyTwo = "";
     private static final Logger logger = Logger.getLogger(PPEScannerServiceImp.class.getName());
 
 
@@ -76,26 +77,25 @@ public class PPEScannerServiceImp implements PPEScannerService, ApplicationListe
             case "FACE_COVER":{
                 activeBodyCover = bodyPart;
                 activeBody = "FACE";
+                activeBodyTwo="";
                 break;
             }
-            case "HEAD":{
+            case "HEAD_COVER":{
                 activeBodyCover = bodyPart;
                 activeBody = "HEAD";
+                activeBodyTwo="";
                 break;
             }
-            case "LEFT_HAND":{
+            case "HAND_COVER":{
                 activeBodyCover = bodyPart;
                 activeBody = "LEFT_HAND";
-                break;
-            }
-            case "RIGHT_HAND":{
-                activeBodyCover = bodyPart;
-                activeBody = "RIGHT_HAND";
+                activeBodyTwo = "RIGHT_HAND";
                 break;
             }
             default:{
                 activeBodyCover = bodyPart;
                 activeBody = "FACE";
+                activeBodyTwo="";
                 break;
             }
         }
@@ -112,10 +112,12 @@ public class PPEScannerServiceImp implements PPEScannerService, ApplicationListe
      * @return
      */
     private boolean isViolation(DetectProtectiveEquipmentResult result) {
+        logger.info(activeBody);
+
         return result.getPersons().stream()
                 .flatMap(p -> p.getBodyParts().stream())
-                .anyMatch(bodyPart -> bodyPart.getName().equals(activeBody)
-                        && bodyPart.getEquipmentDetections().isEmpty());
+                .anyMatch(bodyPart -> bodyPart.getEquipmentDetections().isEmpty() &&
+                                (bodyPart.getName().equals(activeBody) ||  bodyPart.getName().equals(activeBodyTwo)));
     }
     @Override
     public DetectProtectiveEquipmentResult detectFaceCoverProtectiveEquipment(String bucketName, S3ObjectSummary image) {
