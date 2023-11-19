@@ -1,4 +1,4 @@
-FROM  eclipse-temurin:17-jdk as builder
+FROM  3.9-amazoncorretto-17-al2023 as builder
 COPY pom.xml .
 COPY src ./src
 RUN mvn package
