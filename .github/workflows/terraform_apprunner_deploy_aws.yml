@@ -8,14 +8,16 @@ on:
       - '**'
 env:
   IMAGE_CONTAINER: 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private
+  BUCKET_NAME: kandidat-id-2012
 jobs:
   create_s3_image_bucket:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: eu-west-1
       PORT: 8080
-      BUCKET_NAME: kandidat-id-2012
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -44,7 +46,7 @@ jobs:
         if: steps.check-bucket.outputs.bucket_exists != 'true'
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3api create-bucket --region eu-west-1  --bucket $BUCKET_NAME --object-ownership BucketOwnerEnforced
+          aws s3api create-bucket --bucket $BUCKET_NAME --region eu-west-1  --create-bucket-configuration LocationConstraint=eu-west-1
           aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit
           aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance
           aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/private
@@ -53,6 +55,7 @@ jobs:
   copy_files_to_s3_bucket:
     runs-on: ubuntu-latest
     needs: create_s3_image_bucket
+
     steps:
       - name: Check if Image Bucket Exists
         env:
@@ -131,7 +134,7 @@ jobs:
       EMAIL: ${{ secrets.EMAIL }}
       ALARM_LOGIN_THRESHOLD: 2
       METRIC_NAME: unauthorized_scan_attempts.count
-      BUCKET_NAME: kandidat-id-2012
+
 
     #    TF_LOG: trace
     steps:
