@@ -8,7 +8,13 @@ Sensoren må lage en kopi (fork) av følgende repository: https://github.com/fre
 Sensoren må logge inn på AWS-kontoen, navigere til IAM, deretter til "users", gå inn på sin bruker og velge "Create access key". Deretter velger man CLI, gir nøkkelen et navn og kopierer verdiene for Access key og Secret access key. Se vedlagt bilde av en gammel og deaktivert nøkkel
 ![aws_key_val.png](..%2F..%2F..%2FUsers%2Fbjart%2FDesktop%2Faws_key_val.png)
 isse verdiene skal legges inn i GitHub Action secrets, som vil bli forklart nærmere nedenfor. Pass på å ikke lukke denne siden før du har lagt inn verdiene i GitHug og i cmd i oppgave1 B
-
+Hvis sensor skal bruke egen S3 bucket for bilder eller kandidat-id-2012 er slettet må sensor lage ny bucket  med folder  
+camera/pictures - her skal alle bilde fra mappen pictures i repoet lastes opp
+camera/empolyee - hit laster sensor opp 1 eller flere bilder fra mappen pictures i repoet eller egne bilder,  
+men for at automatisk scanning skal fungere så må man også laste bilde opp til camera/pictures
+camera/private - mappen som kunnden bruker for å laste opp bilder fra private ingangs camera
+camera/entrence - mappen som kunden bruker for å laste opp bilder fra offentlig inngangs kamera
+camera/exit - mappen som kunden lsater opp bilder fra utgangs kamera
 ### Github
 Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions.  
 Her skal sensor lage til to secrets:  
@@ -33,6 +39,8 @@ PREFIX: Student-Nr-2012 - change to a unique global name if he wants his own app
 PORT: 8080 - change if he need a diffrent port  
 ALARM_LOGIN_THRESHOLD: 2 - change if he wants to increase how many failed etempts is needed for image scanning   
 METRIC_NAME: unauthorized_scan_attempts.count - change if you want to use module to messure diffrent metric
+BUCKET_NAME: hvis man skal bruke egen bucket så må man opdpatere denne,   
+husk å kopiere over bilder og lag mapper forklart over under AWS
 
 ## OPPAGAVE 1 A
 
