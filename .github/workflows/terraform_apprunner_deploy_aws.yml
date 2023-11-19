@@ -1,4 +1,4 @@
-name: Deploy Apprunner AWS Terraform
+name: Apprunner AWS Terraform
 
 on:
   push:
