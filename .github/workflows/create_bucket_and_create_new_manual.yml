@@ -29,37 +29,14 @@ jobs:
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           aws s3api create-bucket --bucket $BUCKET_NAME --region eu-west-1  --create-bucket-configuration LocationConstraint=eu-west-1
-          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit/testfile.txt
-          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance/testfile.txt
-          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/private/testfile.txt
-          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/employee/testfile.txt
 
   copy_files_to_s3_bucket:
     runs-on: ubuntu-latest
     needs: create_s3_image_bucket
 
     steps:
-      - name: Check if Image Bucket Exists
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-west-1
-        run: |
-          if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>&1; then
-          echo "BUCKET_EXISTS=true" >> $GITHUB_ENV
-          else
-          echo "BUCKET_EXISTS=false" >> $GITHUB_ENV
-          fi
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Check if Bucket  Folder camera/pictures has images
-        if: ${{ env.BUCKET_EXISTS == 'true' }}
-        id: s3-check
-        run: |
-          object_count=$(aws s3 --region eu-west-1  ls s3://$BUCKET_NAME/camera/pictures/ | wc -l)
-          echo "::set-output name=object_count::$object_count"
-
       - name: Copy Images If Folder is Empty
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -68,9 +45,9 @@ jobs:
         if: ${{ steps.s3-check.outputs.object_count == '0' }}
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3 cp ./pictures s3://$BUCKET_NAME/camera/pictures/ --recursive
-          aws s3 cp ./pictures/petter.jpg s3://$BUCKET_NAME/camera/employee/petter.jpg 
-          aws s3 cp /pictures/kari.jpg s3://$BUCKET_NAME/camera/employee/kari.jpg 
-          aws s3 cp ./pictures/stine.jpg s3://$BUCKET_NAME/camera/employee/stine.jpg 
-  
+          aws s3 cp /pictures s3://$BUCKET_NAME/camera/pictures/ --recursive
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/private/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/employee/testfile.txt
   
