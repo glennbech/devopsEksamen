@@ -31,10 +31,10 @@ jobs:
           aws s3 rm s3://$BUCKET_NAME --recursive 
           aws s3 rb s3://$BUCKET_NAME
           aws s3api create-bucket --bucket $BUCKET_NAME --region eu-west-1  --create-bucket-configuration LocationConstraint=eu-west-1
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/private
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/employee
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/private/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/employee/testfile.txt
 
   copy_files_to_s3_bucket:
     runs-on: ubuntu-latest

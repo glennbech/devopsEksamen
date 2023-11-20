@@ -29,10 +29,10 @@ jobs:
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           aws s3api create-bucket --bucket $BUCKET_NAME --region eu-west-1  --create-bucket-configuration LocationConstraint=eu-west-1
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/private
-          aws s3api put-object --region eu-west-1 --bucket $BUCKET_NAME --key camera/employee
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/exit/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/entrance/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/private/testfile.txt
+          aws s3api ./testfile.txt --region eu-west-1 --bucket $BUCKET_NAME --key camera/employee/testfile.txt
 
   copy_files_to_s3_bucket:
     runs-on: ubuntu-latest
@@ -68,9 +68,9 @@ jobs:
         if: ${{ steps.s3-check.outputs.object_count == '0' }}
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3 cp /pictures s3://$BUCKET_NAME/camera/pictures/ --recursive
-          aws s3 cp /pictures/petter.jpg s3://$BUCKET_NAME/camera/employee/petter.jpg 
+          aws s3 cp ./pictures s3://$BUCKET_NAME/camera/pictures/ --recursive
+          aws s3 cp ./pictures/petter.jpg s3://$BUCKET_NAME/camera/employee/petter.jpg 
           aws s3 cp /pictures/kari.jpg s3://$BUCKET_NAME/camera/employee/kari.jpg 
-          aws s3 cp /pictures/stine.jpg s3://$BUCKET_NAME/camera/employee/stine.jpg 
+          aws s3 cp ./pictures/stine.jpg s3://$BUCKET_NAME/camera/employee/stine.jpg 
   
   
