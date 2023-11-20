@@ -4,9 +4,9 @@ on:
     branches:
       - main
 env:
-  S3_IMAGE_BUCKET: sam-image-bucket-pgr-id-2012 # this needs to be empty if recreating
-  STACK_NAME: sam-ppe-scan-2012
-  S3_ARTIFACT: kandidat-id-2012
+  S3_IMAGE_BUCKET: ${{ vars.S3_IMAGE_BUCKET }}
+  STACK_NAME: ${{ vars.STACK_NAME }}
+  S3_ARTIFACT: ${{ vars.S3_ARTIFACT }}
 
 defaults:
   run:
@@ -23,6 +23,6 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
+          aws-region: ${{ vars.AWS_REGION }}
       - run: sam build  --use-container
       - run: sam deploy --stack-name ${{ env.STACK_NAME }} --s3-bucket ${{ env.S3_ARTIFACT }} --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides s3Bucket=${{ env.S3_IMAGE_BUCKET }}

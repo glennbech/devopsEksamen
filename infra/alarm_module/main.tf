@@ -11,6 +11,7 @@ resource "aws_cloudwatch_metric_alarm" "threshold" {
 
   alarm_description = "Alarm Module is for ${var.metric_name} metric and has alarm set too ${var.threshold} GreaterThanThreshold"
   alarm_actions     = [aws_sns_topic.user_updates.arn]
+
 }
 
 resource "aws_sns_topic" "user_updates" {

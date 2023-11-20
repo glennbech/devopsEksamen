@@ -29,7 +29,7 @@ resource "aws_apprunner_service" "service" {
 }
 
 resource "aws_iam_role" "role_for_apprunner_service" {
-  name               = "ApprunnerS3RekognitionCWAccessRole"
+  name               = "ApprunnerS3RekognitionCWAccessRole${var.prefix}"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -53,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "attachment" {
 }
 # Creete polcy using given polcy document
 resource "aws_iam_policy" "policy" {
-  name        = "RekognitionImageRolePolicy"
+  name        = "RekognitionImageRolePolicy${var.prefix}"
   description = "Policy for apprunner instance to use rekognition, cloudwatch and S3 bucket"
   policy      = data.aws_iam_policy_document.policy_document.json
 }
