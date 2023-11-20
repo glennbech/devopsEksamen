@@ -52,7 +52,7 @@ jobs:
 
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          aws s3 rb s3://$BUCKET_NAME
+          aws s3 rb --force s3://your_bucket_name
           
 
   create_s3_image_bucket:
