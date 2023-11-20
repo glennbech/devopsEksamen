@@ -15,8 +15,10 @@ jobs:
       PORT: 8080
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v2
+
 
       - name: Check if Image Bucket Exists
         id: check-bucket
@@ -25,22 +27,19 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: eu-west-1
         run: |
-          
-          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
-          if aws s3api head-bucket --region eu-west-1  --bucket $BUCKET_NAME 2>/dev/null; then
-          echo "Bucket exists"
-          echo "::{bucket_exists}={true}" >> $GITHUB_OUTPUT
+          if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>&1; then
+          echo "BUCKET_EXISTS=true" >> $GITHUB_ENV
           else
-          echo "Bucket does not exist"
-          echo "{bucket_exists}={false}" >> $GITHUB_OUTPUT
+          echo "BUCKET_EXISTS=false" >> $GITHUB_ENV
           fi
 
       - name: Create Image Bucket and folders
+        if: ${{ env.BUCKET_EXISTS != 'true' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: eu-west-1
-        if: steps.check-bucket.outputs.bucket_exists != 'true'
+
         run: |
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 244530008913.dkr.ecr.eu-west-1.amazonaws.com
           aws s3api create-bucket --bucket $BUCKET_NAME --region eu-west-1  --create-bucket-configuration LocationConstraint=eu-west-1
@@ -60,17 +59,16 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: eu-west-1
         run: |
-          if aws s3api head-bucket --region eu-west-1  --bucket $BUCKET_NAME 2>/dev/null; then
-          echo "Bucket exists"
-          echo "::set-output name=bucket_exists::true"
+          if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>&1; then
+          echo "BUCKET_EXISTS=true" >> $GITHUB_ENV
           else
-          echo "Bucket does not exist"
-          echo "::set-output name=bucket_exists::false"
+          echo "BUCKET_EXISTS=false" >> $GITHUB_ENV
           fi
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Check if Bucket  Folder camera/pictures has images
+        if: ${{ env.BUCKET_EXISTS == 'true' }}
         id: s3-check
         run: |
           object_count=$(aws s3 --region eu-west-1  ls s3://$BUCKET_NAME/camera/pictures/ | wc -l)
