@@ -3,7 +3,10 @@ name: Apprunner AWS Terraform
 on:
   push:
     branches:
-      - master
+      - "*"
+      - "**"
+      - "*/*"
+      - "**/**"
 env:
   IMAGE_CONTAINER: 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private
   BUCKET_NAME: kandidat-id-2012
