@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  S3_IMAGE_BUCKET: sam-image-s3-2012 # this needs to be empty if recreating
+  S3_IMAGE_BUCKET: sam-image-bucket-pgr-id-2012 # this needs to be empty if recreating
   STACK_NAME: sam-ppe-scan-2012
   S3_ARTIFACT: kandidat-id-2012
 
