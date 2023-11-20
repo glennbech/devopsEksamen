@@ -32,7 +32,7 @@ Resources:
     DependsOn: Bucket
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: ppe_check/
+      CodeUri: hello_world/
       Handler: app.lambda_handler
       Role: !GetAtt LambdaS3RecognitionRole.Arn
       Runtime: python3.9
