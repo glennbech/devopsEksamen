@@ -4,6 +4,8 @@
 ### Git
 Sensoren må lage en kopi (fork) av følgende repository: https://github.com/freebattie/devopsEksamen
 
+
+
 ### AWS
 Sensoren må logge inn på AWS-kontoen, navigere til IAM, deretter til "users", gå inn på sin bruker og velge "Create access key". Deretter velger man CLI, gir nøkkelen et navn og kopierer verdiene for Access key og Secret access key. Se vedlagt bilde av en gammel og deaktivert nøkkel
 ![aws_key_val.png](..%2F..%2F..%2FUsers%2Fbjart%2FDesktop%2Faws_key_val.png)
@@ -16,15 +18,28 @@ camera/private - mappen som kunnden bruker for å laste opp bilder fra private i
 camera/entrence - mappen som kunden bruker for å laste opp bilder fra offentlig inngangs kamera
 camera/exit - mappen som kunden lsater opp bilder fra utgangs kamera
 ### Github
-Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions.  
+Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions > secrets  
 Her skal sensor lage til to secrets:  
 AWS_ACCESS_KEY_ID  
 AWS_SECRET_ACCESS_KEY  
-MAIL
+MAIL  
+
+Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions > variables 
+AWS_REGION - eu-west-1  
+BUCKET_NAME  - namn på bucket å bruke for det meste tingene
+IMAGE_CONTAINER  - ECR som skal brukes( du må lage dette manuelt inne på AWS)
+PORT - 8080  - endre til hva du trenger
+PREFIX  - som skal legges på for å hjelpe for unike navn
+S3_ARTIFACT  - hvor SAM skal lagre sin kofigurasjon
+S3_IMAGE_BUCKET  - Legg inn en unik bucket navn som ikke finnes for å skanne bilder 
+STACK_NAME - Legg inn et unikt app navn som ikke finnes
+
 Under "Name" for det første legger du inn "AWS_ACCESS_KEY_ID", og verdien "Access key" fra AWS som "Secret". Deretter trykker du på "Add secret". Deretter oppretter du en til med "AWS_SECRET_ACCESS_KEY" som "Name", og "Secret access key" fra AWS som "Secret". Se
 ![github_secret.png](..%2F..%2F..%2FUsers%2Fbjart%2FDesktop%2Fgithub_secret.png)
 på mail så legger du inn mailen som du vill alarmen i oppgave 4 skal testes mot
-
+Der etter må du lage variable på variable tabben.
+Lag BUCKET_NAME og legg inn kandidat-id-2012
+hvis du skal lage en
 ### GitHub ACTION 
 
 for sam_deploy_main.yml må følgendes endres:  
@@ -41,6 +56,24 @@ ALARM_LOGIN_THRESHOLD: 2 - change if he wants to increase how many failed etempt
 METRIC_NAME: unauthorized_scan_attempts.count - change if you want to use module to messure diffrent metric
 BUCKET_NAME: hvis man skal bruke egen bucket så må man opdpatere denne,   
 husk å kopiere over bilder og lag mapper forklart over under AWS
+
+### Terraform
+Sensor må også endre på infra/provider.tf  hvis han skal deploye selv   
+bucket = "kandidat-id-2012"  
+key    = "kandidat-id-2012/apprunner-a-new-state.state"  
+region = "eu-west-1"  
+
+### FOR SENSOR VED UTSKIFT AV ALLE VERDIER FOR Å LAGE NY APP
+Gå inn å skift på alle env,    
+create_bucket_and_copy_images_manual.yml  
+sam_build_and_deploy_main.yml
+sam_build_not_main.yml
+terraform_apprunner_deploy_aws-yml  
+
+
+
+terraform_apprunner_deploy_aws
+
 
 ## OPPAGAVE 1 A
 
