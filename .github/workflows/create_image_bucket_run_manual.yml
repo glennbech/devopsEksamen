@@ -27,7 +27,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: eu-west-1
         run: |
-          if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>&1; then
+          if aws s3api head-bucket --bucket $BUCKET_NAME 2>&1; then
           echo "BUCKET_EXISTS=false" >> $GITHUB_ENV
           else
           echo "BUCKET_EXISTS=true" >> $GITHUB_ENV
