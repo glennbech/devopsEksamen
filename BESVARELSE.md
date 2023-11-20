@@ -17,6 +17,7 @@ men for at automatisk scanning skal fungere så må man også laste bilde opp ti
 camera/private - mappen som kunnden bruker for å laste opp bilder fra private ingangs camera
 camera/entrence - mappen som kunden bruker for å laste opp bilder fra offentlig inngangs kamera
 camera/exit - mappen som kunden lsater opp bilder fra utgangs kamera
+
 ### Github
 Sensoren må opprette to secrets ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions > secrets  
 Her skal sensor lage til to secrets:  
@@ -34,28 +35,24 @@ S3_ARTIFACT  - hvor SAM skal lagre sin kofigurasjon
 S3_IMAGE_BUCKET  - Legg inn en unik bucket navn som ikke finnes for å skanne bilder 
 STACK_NAME - Legg inn et unikt app navn som ikke finnes
 
+
 Under "Name" for det første legger du inn "AWS_ACCESS_KEY_ID", og verdien "Access key" fra AWS som "Secret". Deretter trykker du på "Add secret". Deretter oppretter du en til med "AWS_SECRET_ACCESS_KEY" som "Name", og "Secret access key" fra AWS som "Secret". Se
 ![github_secret.png](..%2F..%2F..%2FUsers%2Fbjart%2FDesktop%2Fgithub_secret.png)
 på mail så legger du inn mailen som du vill alarmen i oppgave 4 skal testes mot
 Der etter må du lage variable på variable tabben.
 Lag BUCKET_NAME og legg inn kandidat-id-2012
 hvis du skal lage en
+
 ### GitHub ACTION 
 
 for sam_deploy_main.yml må følgendes endres:  
-S3_IMAGE_BUCKET - Her legger du inn hvor SAM skal hente bilder fra
-STACK_NAME - Denne må endres til unikt navn på SAM appen
-S3_ARTIFACT - Denne trenges kun å endres om sensor vill burke en annen bucket for SAM sin configurasjon
 
 for terraform_apprunner_deploy_aws.yml:  
-IMAGE_CONTAINER - change if he wants to use his own aws ECR for storing docker images  
-AWS_REGION: eu-west-1 - change if he wants to use diffrent region  
-PREFIX: Student-Nr-2012 - change to a unique global name if he wants his own apprunner  
-PORT: 8080 - change if he need a diffrent port  
+ 
 ALARM_LOGIN_THRESHOLD: 2 - change if he wants to increase how many failed etempts is needed for image scanning   
 METRIC_NAME: unauthorized_scan_attempts.count - change if you want to use module to messure diffrent metric
-BUCKET_NAME: hvis man skal bruke egen bucket så må man opdpatere denne,   
-husk å kopiere over bilder og lag mapper forklart over under AWS
+
+### 
 
 ### Terraform
 Sensor må også endre på infra/provider.tf  hvis han skal deploye selv   
