@@ -34,7 +34,7 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Role: !GetAtt LambdaS3RecognitionRole.Arn
+      Role: !GetAtt LambdaS3RecognitionRole2012.Arn
       Runtime: python3.9
       Environment:
         Variables:
@@ -48,7 +48,7 @@ Resources:
           Properties:
             Path: /check
             Method: get
-  LambdaS3RecognitionRole:
+  LambdaS3RecognitionRole2012:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -87,9 +87,9 @@ Outputs:
   CheckForPPEApi:
     Description: "API Gateway endpoint URL for Prod stage for PPE Scanner function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod${ApiPath}/"
-  PPEScannerFunction:
+  PPEScannerFunction2012:
     Description: "PPE Scanner  Lambda Function ARN"
-    Value: !GetAtt PPEScannerFunction.Arn
-  PPEScannerFunctionIamRole:
+    Value: !GetAtt PPEScannerFunction2012.Arn
+  LambdaS3RecognitionRole2012:
     Description: "Implicit IAM Role created for PPE Scanner function"
-    Value: !GetAtt LambdaS3RecognitionRole.Arn
+    Value: !GetAtt LambdaS3RecognitionRole2012.Arn
