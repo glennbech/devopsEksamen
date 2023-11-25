@@ -33,8 +33,8 @@ Sensoren må opprette 8 stk variabler ved å gå inn på sitt repository og velg
 - PORT - 8080
 - PREFIX - kandidat_2012
 - S3_ARTIFACT - kandidat-id-2012
-- S3_IMAGE_BUCKET - sam-image-bucket-pgr-id-2012
-- STACK_NAME - sam-ppe-scan-2012
+- S3_IMAGE_BUCKET - imagekadidat2012
+- STACK_NAME - samKandidat2012PPE
 
 AWS_REGION - hvilken region  
 BUCKET_NAME - namn på bucket å bruke for det meste tingene  
