@@ -6,16 +6,13 @@ import com.example.s3rekognition.service.TrackingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Random;
-
-import io.micrometer.core.instrument.Gauge;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.DistributionSummary;
 
 @RestController
 public class CameraController {
@@ -34,6 +31,7 @@ public class CameraController {
     @ResponseBody
     @Timed
     public ResponseEntity<CameraScanResponse>  scanPrivateEntranceAutomatic()  {
+
 
         setupScannerService();
         simulateImageUploadToPrivateEntrenceCameraFolder();

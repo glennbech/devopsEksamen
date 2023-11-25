@@ -160,6 +160,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
         var imageloadTimer = imageS3Timer.start();
         var resp= imageScanningValidationByCameraLocation(privateEntrance);
         meterRegistry.timer("scan_image_at_private_entrance_timer").record(imageloadTimer.stop(), TimeUnit.NANOSECONDS);
+
         return  resp;
     }
     public CameraScanResponse scanImageAtExit() throws JsonProcessingException {
@@ -226,6 +227,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
 
             }
         }
+
         meterRegistry.timer("Image_loop_timer").record(imageLoopTimer.stop(), TimeUnit.NANOSECONDS);
         if (allMatches.size() == 1)
             return  allMatches.stream().findFirst().orElse(new CameraScanResponse());
