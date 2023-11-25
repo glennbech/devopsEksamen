@@ -8,7 +8,7 @@ https://github.com/freebattie/devopsEksamen
 ### AWS 
 Sensoren må logge inn på AWS-kontoen, navigere til IAM, der etter til "users", gå inn på sin bruker og velge "Create access key". Der etter velger man CLI, gir nøkkelen et navn og kopierer verdiene for Access key og Secret access key. Se vedlagt bilde av en gammel og deaktivert nøkkel!
 
-<img alt="aws_key_val.png" height="300" src="img/Faws_key_val.png" width="300"/>
+<img alt="aws_key_val.png" height="300" src="img/aws_key_val.png" width="300"/>
 
 Disse verdiene skal legges inn i GitHub Action secrets, som vil bli forklart nærmere nedenfor. Pass på å ikke lukke denne siden før du har lagt inn verdiene i GitHub og i cmd i oppgave1 B
 
