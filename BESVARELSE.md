@@ -36,14 +36,14 @@ Sensoren må opprette 8 stk variabler ved å gå inn på sitt repository og velg
 - S3_IMAGE_BUCKET - sam-image-bucket-pgr-id-2012
 - STACK_NAME - sam-ppe-scan-2012
 
-AWS_REGION - hvilken region
-BUCKET_NAME - namn på bucket å bruke for det meste tingene
-IMAGE_CONTAINER -  ECR som skal brukes (du må lage dette manuelt inne på AWS hvis du ikke bruker studentens ECR)
-PORT - port som appen skal kjøres på
-PREFIX - som skal legges på for å hjelpe for unike navn
-S3_ARTIFACT - hvor SAM skal lagre sin kofigurasjon
-S3_IMAGE_BUCKET - Legg inn en unik bucket navn som ikke finnes for å skanne bilder
-STACK_NAME - Legg inn et unikt app navn som ikke finnes
+AWS_REGION - hvilken region  
+BUCKET_NAME - namn på bucket å bruke for det meste tingene  
+IMAGE_CONTAINER -  ECR som skal brukes (du må lage dette manuelt inne på AWS hvis du ikke bruker studentens ECR)  
+PORT - port som appen skal kjøres på  
+PREFIX - som skal legges på for å hjelpe for unike navn  
+S3_ARTIFACT - hvor SAM skal lagre sin kofigurasjon  
+S3_IMAGE_BUCKET - Legg inn en unik bucket navn som ikke finnes for å skanne bilder  
+STACK_NAME - Legg inn et unikt app navn som ikke finnes  
 
 ### GitHub ACTION 
 for sam_deploy_main.yml må følgendes endres:
