@@ -24,9 +24,10 @@ Under "Name" for det første legger du inn "AWS_ACCESS_KEY_ID", og verdien "Acce
 <img alt="github_secret.png" height="300" src="img/github_secret.png" width="300"/>
 
 
-På mail så legger du inn mailen som du vill alarmen i oppgave 4 skal testes mot. Der etter må du lage variable på variable tabben. Lag BUCKET_NAME og legg inn kandidat-id-2012
+På mail så legger du inn mailen som du vill alarmen i oppgave 4 skal testes mot. 
 
-Sensoren må opprette 8 stk variabler ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions > variables
+Sensoren må opprette 8 stk variabler ved å gå inn på sitt repository og velge: Settings > "Secrets and variables" > Actions > variables  
+Her må alt endres til unike verdier hvor det trengs hvis det skal deployes som ny applikasjon
 - AWS_REGION - eu-west-1
 - BUCKET_NAME - kandidat-id-2012
 - IMAGE_CONTAINER - 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private
@@ -46,28 +47,27 @@ S3_IMAGE_BUCKET - Legg inn en unik bucket navn som ikke finnes for å skanne bil
 STACK_NAME - Legg inn et unikt app navn som ikke finnes  
 
 ### GitHub ACTION 
-for sam_deploy_main.yml må følgendes endres:
+Sensor kan endre på følgendes om ønskes:
 for terraform_apprunner_deploy_aws.yml:
 - ALARM_LOGIN_THRESHOLD: 2 - endr på denne om du vill øke antall forsøk som skal være lov
 - METRIC_NAME: unauthorized_scan_attempts.count - skift om du vill måle en annen verdi med varsel til dømes antall folk i bygget
 
 ### Terraform
-Sensor må også endre på infra/provider.tf hvis han skal deploye selv, denne bucketen må vøre laget før terraform kan kjøre, hvis sensor har valgt å teste sin egen deploy så kan han bruke samme bucket her som i BUCKET_NAME da den blir manuelt laget ved å kjøre XXX
+Sensor må også endre på infra/provider.tf hvis han skal deploye selv, denne bucketen må være laget før terraform kan kjøre, hvis sensor har valgt å teste sin egen deploy så kan han bruke samme bucket her som i BUCKET_NAME da den blir manuelt laget ved å kjøre create_bucket_and_copy_images_manual.yml(se Deploy for Sensor)
 bucket = "kandidat-id-2012"
 key = "kandidat-id-2012/apprunner-a-new-state.state"
 region = "eu-west-1"
 
-### FOR SENSOR VED UTSKIFT AV ALLE VERDIER FOR Å LAGE NY APP
+### Deploy for Sensor
+Etter å ha gjort alle desse endringene må sensor manuelt kjøre create_bucket_and_copy_images_manual.yml fra github actions slik at buckets,mapper blir laget og blider blir kopiert over. Dette er for å slippe å gjøre mye manuelt arbeid med å lage mapper og kopiere filer over til mappene.
+etter det kan man lage en ny gren å pushe den, det vil kjøre build på sam og apprunner. Han kan da videre ta en Pull request til main å se at build og deploy virker på sam og apprunner. Eller han kan manuelt starte de 3 github action fra github, create_bucket_and_copy_images_manual.yml skal kun kjørese en gang for å sette opp nødvedige s3 buckets.
 
 
 ## OPPGAVE 1 A
 Jeg har endret API-kallet fra /hello til /check. Det er også gjort andre tilpasninger i template-filen for å tydeligere gjenspeile funksjonaliteten.
 Jeg har laget 2 work flows som heter sam_deploy_main.yml og sam_deploy_main.yml.
-For sam_deploy_main.yml må følgendes endres for å lage en ny deploy:
-- S3_IMAGE_BUCKET - Her legger du inn hvor SAM skal hente bilder fra
-- STACK_NAME - Denne må endres til unikt navn på SAM appen
-- S3_ARTIFACT - Denne trenges kun å endres om sensor vill burke en annen bucket for SAM sin konfigurasjon
-  sam_deploy_not_main.yml trenges ingen ting å endres
+Så lenge man har lagt inn alle variabler og secrets på github under  Settings > "Secrets and variables" så skal alt fungere
+ 
 
 ## OPPGAVE 1 B
 Filen ligger i mappen Kjell/hello_world, ga den først et nytt navn men skiftet tilbake i tilfelle automatiske tester. Du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmeligheter og s3 bucket med bilder:
@@ -87,34 +87,78 @@ docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e
 mitt ECR er student2012-private
 
 ## OPPGAVE 3 A
-Intet innhold
+Alle verdier ligger nå inne på github under  Settings > "Secrets and variables"  som sensor også må lage, se over på hvordan.
 
 ## OPPGAVE 4
 mapper i s3 bucket:
 - camera/pictures - her skal alle bilder ligge inkludert en kopi av bilder som blir lagt inn i employee. Dette er kun for at simuleringen skal fungere.
 - camera/employee - her skal det ligge bilder av alle som er ansatt i bedriften.
-- camera/private - mappen som kunnden bruker for å laste opp bilder fra private innganger.
+- camera/private - mappen som kunden bruker for å laste opp bilder fra private innganger.
 - camera/entrance - mappen som kunden bruker for å laste opp bilder fra offentlig inngangs kamera.
 - camera/exit - mappen som kunden laster opp bilder fra utgangskameraet.
 
-### API for CameraController:
-- Get /scan-private-entrance-automatic
-- Get /scan-private-entrance-manual
-- Get /scan-exit-manual
-- Get /scan-exit-automatic
-- Get /scan-public-entrance-manual
-- Get /scan-public-entrance-automatic
-
-### For RekognitionController:
-- Get /scan-custom-ppe
+### Funksjonalitet RekognitionController:
+I tilegg til det orginale så laget eg et For å gi bedriftene mer fleksibilitet, med muligheten til å bestemme hvilken kroppsdeler den skal skannes for verneutstyr. Da kan man sjekke om man har på seg hjelm i noen områder og ansiktsbeskyttelse i andre. gir samme respons som det orginale endpointet.
 
 ### Funksjonalitet CameraController:
-Selskapet har nå utvidet med to nye funksjoner. Den første funksjonen gjør det mulig for selskaper å laste opp bilder til en dedikert mappe (S3 bucket folder) for ansiktsgjenkjenning. Foreksempel kan dette være et bilde fra kamera ved en dør som lastes opp til s3 bucket for scanning. For å identifisere om personen er ansatt eller ikke, slik at kunden kan bestemme om døren skal åpnes eller ikke. Den andre funksjonen omfatter både en offentlig inngang og en offentlig utgang. Her skannes individene som kommer inn og går ut, slik at selskapet har oversikt over antall personer og ansatte til enhver tid i bygningen. Dette gir muligheten til å ha kontroll over hvem som befinner seg i lokalene til enhver tid. Den støtter kun en person om gangen, så bildene kan kun inneholde en person. Hvis personen er ansatt og ikke allerede registrert som i bygget så blir han lagt til hashmappet for ansatte også. Alle endpoints for bilde scanning har både en manuell api hvor du må selv finne et bilde å laste det opp til rett mappe og en hvor jeg simulere at bilde blir lastet opp ved å plukke et tilfeldig bilde fra camera/pictures og laste det opp til gitt plass private, entrance eller exit mappen. Manuel api må du selv gå å manuelt laste opp et bilde til s3 bucketen og til rett mappe for endpoint du vill teste.
-
-### Funksjonalitet RekognitionController:
-For å gi bedriftene mer fleksibilitet har jeg lagt til muligheten til å bestemme hvilken kroppsdeler den skal skanne for verneutstyr. Da kan man sjekke om man har på seg hjelm i noen områder og ansiktsbeskyttelse i andre.
+Lagt til 3 nye endpoints, det første er for å sjekke om en person er ansatt eller ikke på en privat ingang, for å teste denne så kjører du :
 ```
-curl 'localhost:8080/scan-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
+curl 'localhost:8080/scan-private-entrance-automatic'
+```
+Denne vil kopiere et bilde fra camera/pictures eller fra camera/employee(random) å sammenligne det med bilder i camera/employee for å sjekk om det er en ansatt eller ikke å retunere en respons i formatet
+```
+{
+isEmployee:true,
+faceId:"sadlas-adasd-asdasd",
+externalImageId:"stine.jpg",
+similarity:100,
+enter: "date and time enter building",
+leave:"time he left or null if still in"
+}
+```
+De 2 andre er for å skanne personer som går inn på kunde ingangen og alle som går ut av bygget, du tester ved å kjøre 
+```
+curl 'localhost:8080/scan-public-entrance-automatic'
+```
+og
+```
+curl 'localhost:8080/scan-exit-automatic'
+```
+Responsen er samme som over uten om hvis bygningen er tom da får du tilbake "Building is empty". Du kan teste alle desse endpointene med å manuelt laste opp bilder til det forskjellige mappene å så kalle på manuelle endpoints. se under for alle endpoints.
+
+### API:
+Under finner du alle API endepunktene husk å skift ut localhost:8080 med aws adressen hvis du skal teste mot det som kjører på aws.
+- Get /scan-private-entrance-automatic
+```
+curl 'localhost:8080/scan-private-entrance-automatic'
+```
+- Get /scan-private-entrance-manual
+```
+curl 'localhost:8080/scan-private-entrance-manual'
+```
+- Get /scan-exit-manual
+```
+curl 'localhost:8080/scan-exit-manual'
+```
+- Get /scan-exit-automatic
+```
+curl 'localhost:8080/scan-exit-automatic'
+```
+- Get /scan-public-entrance-manual
+```
+curl 'localhost:8080/scan-public-entrance-manual'
+```
+- Get /scan-public-entrance-automatic
+```
+curl 'localhost:8080/scan-public-entrance-automatic'
+```
+- GET /scan-ppe
+```
+curl 'localhost:8080/scan-ppe?bucketName=<din bucket>'
+```
+- Get /scan-custom-ppe
+```
+curl 'localhost:8080/scan-custom-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
 ```
 
 ### Måling
@@ -136,7 +180,6 @@ Disse er for å se etter problemer hvis ting begynner å gå sakte, eller om det
 
 Av DistributionSummary måler jeg følgende:
 - Jeg setter tiden når en person kom inn og når han går ut igjen av bygget. Dette gir meg innsikt i når på døgnet folk oppholder seg i bygget og hvor lenge de er der.
-
 
 ## OPPGAVE 4. Drøfteoppgaver
 ### A. Kontinuerlig Integrering
@@ -194,7 +237,6 @@ Beskriv hvordan du vil etablere og bruke teknikker vi har lært fra "feedback" f
 å sikre at den nye funksjonaliteten møter brukernes behov. Behovene 
 Drøft hvordan feedback bidrar til kontinuerlig forbedring og hvordan de kan integreres i ulike stadier av   
 utviklingslivssyklusen.
-
 
 For å sikre at applikasjonen fungerer som forventet når det gjelder kostnader og ytelse, er det nyttig å bruke forskjellige verktøy og metrikker. For eksempel kan man sette opp alarmer og logging i AWS for å overvåke kostnader og ytelse. Metrikker som CPU-bruk, minnebruk og trafikkflyt kan også brukes til å sette opp alarmer for automatisk skalering. I tillegg kan man legge til metrikker direkte i koden, for eksempel ved å bruke Micrometer for Java, for å måle ytelse og trafikk.
 
