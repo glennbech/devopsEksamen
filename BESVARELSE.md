@@ -106,7 +106,7 @@ I tilegg til det orginale så laget eg et For å gi bedriftene mer fleksibilitet
 ### Funksjonalitet CameraController:
 Lagt til 3 nye endpoints, det første er for å sjekke om en person er ansatt eller ikke på en privat ingang, for å teste denne så kjører du :
 ```
-curl 'localhost:8080/scan-private-entrance-automatic'
+curl 'http://localhost:8080/scan-private-entrance-automatic'
 ```
 Denne vil kopiere et bilde fra camera/pictures eller fra camera/employee(random) å sammenligne det med bilder i camera/employee for å sjekk om det er en ansatt eller ikke å retunere en respons i formatet
 ```
@@ -121,47 +121,49 @@ leave:"time he left or null if still in"
 ```
 De 2 andre er for å skanne personer som går inn på kunde ingangen og alle som går ut av bygget, du tester ved å kjøre 
 ```
-curl 'localhost:8080/scan-public-entrance-automatic'
+curl 'http://localhost:8080/scan-public-entrance-automatic'
 ```
 og
 ```
-curl 'localhost:8080/scan-exit-automatic'
+curl 'http://localhost:8080/scan-exit-automatic'
 ```
 Responsen er samme som over uten om hvis bygningen er tom da får du tilbake "Building is empty". Du kan teste alle desse endpointene med å manuelt laste opp bilder til det forskjellige mappene å så kalle på manuelle endpoints. se under for alle endpoints.
 
 ### API:
-Under finner du alle API endepunktene husk å skift ut localhost:8080 med aws adressen hvis du skal teste mot det som kjører på aws.
+Under finner du alle API endepunktene husk å skift ut http://localhost:8080 med aws adressen hvis du skal teste mot det som kjører på aws.
 - Get /scan-private-entrance-automatic
 ```
-curl 'localhost:8080/scan-private-entrance-automatic'
+curl 'http://localhost:8080/scan-private-entrance-automatic'
 ```
 - Get /scan-private-entrance-manual
 ```
-curl 'localhost:8080/scan-private-entrance-manual'
+curl 'http://localhost:8080/scan-private-entrance-manual'
 ```
 - Get /scan-exit-manual
 ```
-curl 'localhost:8080/scan-exit-manual'
+curl ''http://localhost:8080/scan-exit-manual'
 ```
 - Get /scan-exit-automatic
 ```
-curl 'localhost:8080/scan-exit-automatic'
+curl ''http://localhost:8080/scan-exit-automatic'
 ```
 - Get /scan-public-entrance-manual
 ```
-curl 'localhost:8080/scan-public-entrance-manual'
+curl 'http://localhost:8080/scan-public-entrance-manual'
 ```
 - Get /scan-public-entrance-automatic
 ```
-curl 'localhost:8080/scan-public-entrance-automatic'
+curl 'http://localhost:8080/scan-public-entrance-automatic'
 ```
 - GET /scan-ppe
+BucketName "Optional"
 ```
-curl 'localhost:8080/scan-ppe?bucketName=<din bucket>'
+curl 'http://localhost:8080/scan-ppe?bucketName=<din bucket | This is Optional>'
 ```
 - Get /scan-custom-ppe
+BucketName "Optional"
 ```
-curl 'localhost:8080/scan-custom-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
+curl 'http://localhost:8080/scan-custom-ppe?bucketName=<din bucket | this is Optional>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
 ```
 
 ### Måling
