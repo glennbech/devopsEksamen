@@ -48,7 +48,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION:  ${{ vars.AWS_REGION }}
       PREFIX: ${{ vars.PREFIX }}
-      PORT: ${{ vars.PORT }}
       EMAIL: ${{ secrets.EMAIL }}
       ALARM_LOGIN_THRESHOLD: 2
       METRIC_NAME: unauthorized_scan_attempts.count
