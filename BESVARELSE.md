@@ -77,8 +77,9 @@ docker run -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=
 ```
 
 ## OPPGAVE 2 A
-Dockerfilen ligger i root folder. Du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmeligheter og bilde s3 bucket:
-hvis du skal teste alle endepunkt så må bucket du bruker hete det samme som 
+Dockerfilen ligger i root folder. Du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmeligheter og  s3 bucket.
+hvis du skal teste alle endepunktene så må bucket du bruke være samme som den du la inn i BUCKET_NAME lengre oppe å du må ha manuelt kjørt create_bucket_and_copy_images_manual.yml
+Har laget til slik at BucketName param er optional, hvis det ikke skrives inn så brukes BUCKET_NAME på begge PPE endepunktene, se API lengre nede for liste av endepunkter. 
 ```
 docker build -t ppe .
 docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=kjellsimagebucket ppe
@@ -88,7 +89,7 @@ docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e
 mitt ECR er student2012-private
 
 ## OPPGAVE 3 A
-Alle verdier ligger nå inne på github under  Settings > "Secrets and variables"  som sensor også må lage, se over på hvordan.
+Alle verdier ligger nå inne på github under  Settings > "Secrets and variables"  som sensor også må lage, Forklart i starten av filen.
 
 ## OPPGAVE 4
 mapper i s3 bucket:
@@ -97,6 +98,7 @@ mapper i s3 bucket:
 - camera/private - mappen som kunden bruker for å laste opp bilder fra private innganger.
 - camera/entrance - mappen som kunden bruker for å laste opp bilder fra offentlig inngangs kamera.
 - camera/exit - mappen som kunden laster opp bilder fra utgangskameraet.
+Desse blir automatis laget når man kjører create_bucket_and_copy_images_manual.yml fra github action den vil også kopiere bilder over 
 
 ### Funksjonalitet RekognitionController:
 I tilegg til det orginale så laget eg et For å gi bedriftene mer fleksibilitet, med muligheten til å bestemme hvilken kroppsdeler den skal skannes for verneutstyr. Da kan man sjekke om man har på seg hjelm i noen områder og ansiktsbeskyttelse i andre. gir samme respons som det orginale endpointet.
