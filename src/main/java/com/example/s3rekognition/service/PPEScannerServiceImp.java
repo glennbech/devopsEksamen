@@ -3,6 +3,7 @@ package com.example.s3rekognition.service;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.model.*;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.s3rekognition.controller.RekognitionController;
@@ -61,7 +62,8 @@ public class PPEScannerServiceImp implements PPEScannerService, ApplicationListe
     @Override
     public List<S3ObjectSummary> getAllImagesInBucket(String bucketName){
         // List all objects in the S3 bucket
-        ListObjectsV2Result imageList = s3Client.listObjectsV2(bucketName);
+        ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucketName).withPrefix("").withDelimiter("/");
+        ListObjectsV2Result imageList = s3Client.listObjectsV2(req);
         List<S3ObjectSummary> images = imageList.getObjectSummaries().stream().filter(f->f.getKey().endsWith(".jpeg")|| f.getKey().endsWith(".jpg")).collect(Collectors.toList());
         // This is all the images in the bucket
 
