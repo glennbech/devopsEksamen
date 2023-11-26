@@ -59,9 +59,9 @@ key = "kandidat-id-2012/apprunner-a-new-state.state"
 region = "eu-west-1"
 
 ### Deploy for Sensor
-Etter å ha gjort alle desse endringene må sensor manuelt kjøre create_bucket_and_copy_images_manual.yml fra github actions slik at buckets,mapper blir laget og blider blir kopiert over. Dette er for å slippe å gjøre mye manuelt arbeid med å lage mapper og kopiere filer over til mappene.
+Hvis sensor har endret alt over må sensor manuelt kjøre create_bucket_and_copy_images_manual.yml fra github actions slik at buckets,mapper blir laget og blider blir kopiert over. Dette er for å slippe å gjøre mye manuelt arbeid med å lage mapper og kopiere filer over til mappene.
 etter det kan man lage en ny gren å pushe den, det vil kjøre build på sam og apprunner. Han kan da videre ta en Pull request til main å se at build og deploy virker på sam og apprunner. Eller han kan manuelt starte de 3 github action fra github, create_bucket_and_copy_images_manual.yml skal kun kjørese en gang for å sette opp nødvedige s3 buckets.
-
+ 
 
 ## OPPGAVE 1 A
 Jeg har endret API-kallet fra /hello til /check. Det er også gjort andre tilpasninger i template-filen for å tydeligere gjenspeile funksjonaliteten.
