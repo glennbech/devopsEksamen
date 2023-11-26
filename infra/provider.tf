@@ -8,7 +8,7 @@ terraform {
 
 
   backend "s3" {
-    bucket = "pgr301-sam-bucket"
+    bucket = "kandidat-id-2012"
     key    = "kandidat-id-2012/apprunner-a-new-state.state"
     region = "eu-west-1"
   }
