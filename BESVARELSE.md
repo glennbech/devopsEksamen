@@ -163,7 +163,7 @@ curl 'localhost:8080/scan-ppe?bucketName=<din bucket>'
 ```
 curl 'localhost:8080/scan-custom-ppe?bucketName=<din bucket>&ppe=<HAND_COVER | HEAD_COVER | FACE_COVER>'
 ```
-
+Test
 ### Måling
 Jeg har laget 3 gauges som viser følgende:
 - Antall ansatte i bygget.
