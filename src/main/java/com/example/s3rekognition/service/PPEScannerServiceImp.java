@@ -64,7 +64,7 @@ public class PPEScannerServiceImp implements PPEScannerService, ApplicationListe
         ListObjectsV2Result imageList = s3Client.listObjectsV2(bucketName);
         List<S3ObjectSummary> images = imageList.getObjectSummaries().stream().filter(f->f.getKey().endsWith(".jpeg")|| f.getKey().endsWith(".jpg")).collect(Collectors.toList());
         // This is all the images in the bucket
-        logger.info("gets here");
+
         return  images;
     }
 

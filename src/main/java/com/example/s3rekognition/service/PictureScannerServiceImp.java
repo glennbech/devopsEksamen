@@ -93,7 +93,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
     }
 
     public void copyImageToPublicExitFolder(String name){
-        logger.info("name was"+ name);
+
         s3Client.copyObject(bucket,"camera/pictures/"+name,bucket,publicExit + name);
     }
     public void copyImageToDestinationFolder(String source,String destination ){
@@ -104,7 +104,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
         int rndIndex = rand.nextInt(0,listing.getObjectSummaries().size());
         int index = 0;
         for (S3ObjectSummary summary: items) {
-            logger.info("we get"+summary.getKey());
+
             if (!summary.getKey().endsWith("/")){
                 if (index == rndIndex){
                     s3Client.copyObject(bucket,summary.getKey(),bucket,destination + summary.getKey().split("/")[2]);
@@ -192,7 +192,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
                 ObjectMapper objectMapper = new ObjectMapper();
 
                 List<FaceMatch> faceImageMatches = getMatchingFaces(rekognitionClient, summary);
-                logger.info("gets here");
+
 
                 s3Client.deleteObject(bucket,summary.getKey());
                 if (faceImageMatches.isEmpty()){

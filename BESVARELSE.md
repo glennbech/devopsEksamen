@@ -78,6 +78,7 @@ docker run -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=
 
 ## OPPGAVE 2 A
 Dockerfilen ligger i root folder. Du må manuelt skifte ut XXX, YYY og kjellsimagebucket med sensors hemmeligheter og bilde s3 bucket:
+hvis du skal teste alle endepunkt så må bucket du bruker hete det samme som 
 ```
 docker build -t ppe .
 docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=XXX -e AWS_SECRET_ACCESS_KEY=YYY -e BUCKET_NAME=kjellsimagebucket ppe
