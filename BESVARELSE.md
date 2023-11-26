@@ -31,7 +31,7 @@ Her må alt endres til unike verdier hvor det trengs hvis det skal deployes som 
 - AWS_REGION - eu-west-1
 - BUCKET_NAME - kandidat-id-2012
 - IMAGE_CONTAINER - 244530008913.dkr.ecr.eu-west-1.amazonaws.com/student2012-private
-- PORT - 8080
+
 - PREFIX - kandidat_2012
 - S3_ARTIFACT - kandidat-id-2012
 - S3_IMAGE_BUCKET - imagekadidat2012
@@ -40,7 +40,7 @@ Her må alt endres til unike verdier hvor det trengs hvis det skal deployes som 
 AWS_REGION - hvilken region  
 BUCKET_NAME - namn på bucket å bruke for det meste tingene  
 IMAGE_CONTAINER -  ECR som skal brukes (du må lage dette manuelt inne på AWS hvis du ikke bruker studentens ECR)  
-PORT - port som appen skal kjøres på  
+
 PREFIX - som skal legges på for å hjelpe for unike navn  
 S3_ARTIFACT - hvor SAM skal lagre sin kofigurasjon  
 S3_IMAGE_BUCKET - Legg inn en unik bucket navn som ikke finnes for å skanne bilder  
