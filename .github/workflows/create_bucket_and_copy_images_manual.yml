@@ -49,5 +49,7 @@ jobs:
           aws s3 cp ./testfile.txt  s3://$BUCKET_NAME/camera/exit/
           aws s3 cp testfile.txt  s3://$BUCKET_NAME/camera/entrance/
           aws s3 cp testfile.txt  s3://$BUCKET_NAME/camera/private/
-          aws s3 cp testfile.txt  s3://$BUCKET_NAME/camera/employee/
+          aws s3 cp pictures/kari.jpg  s3://$BUCKET_NAME/camera/employee/
+          aws s3 cp pictures/lars.jpg  s3://$BUCKET_NAME/camera/employee/
+          aws s3 cp pictures/stig.jpg  s3://$BUCKET_NAME/camera/employee/
   
