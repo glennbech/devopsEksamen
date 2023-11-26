@@ -15,6 +15,7 @@ public class BeanConfig {
     AmazonS3 amazonS3Service(){
         return AmazonS3ClientBuilder.standard().build();
     }
+
     @Bean
     AmazonRekognition amazonRekognitionService(){
         return AmazonRekognitionClientBuilder.standard().build();
