@@ -68,7 +68,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: ./infra
-        run: terraform plan -var="email=$EMAIL"  -var="BUCKET_NAME=$BUCKET_NAME" -var="threshold=$ALARM_LOGIN_THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=${{ env.IMAGE_CONTAINER }}:latest"  -var="port=$PORT" -no-color
+        run: terraform plan -var="email=$EMAIL"  -var="BUCKET_NAME=$BUCKET_NAME" -var="threshold=$ALARM_LOGIN_THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=${{ env.IMAGE_CONTAINER }}:latest"  -no-color
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -79,7 +79,7 @@ jobs:
       - name: Terraform Apply
         working-directory: ./infra
 
-        run: terraform apply -var="email=$EMAIL" -var="BUCKET_NAME=$BUCKET_NAME" -var="threshold=$ALARM_LOGIN_THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=${{ env.IMAGE_CONTAINER }}:latest"  -var="port=$PORT" -auto-approve
+        run: terraform apply -var="email=$EMAIL" -var="BUCKET_NAME=$BUCKET_NAME" -var="threshold=$ALARM_LOGIN_THRESHOLD" -var="metric_name=$METRIC_NAME"  -var="prefix=$PREFIX" -var="image=${{ env.IMAGE_CONTAINER }}:latest"  -auto-approve
 
   
 
