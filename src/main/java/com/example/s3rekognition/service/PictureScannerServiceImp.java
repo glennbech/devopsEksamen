@@ -76,7 +76,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
         ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withPrefix(folder).withDelimiter("/");
         ListObjectsV2Result listing = s3Client.listObjectsV2(req);
         Random rand = new Random();
-        var list = listing.getObjectSummaries().stream().filter(i ->!i.getKey().endsWith("/")).collect(Collectors.toList());
+        var list = listing.getObjectSummaries().stream().filter(i ->!i.getKey().endsWith("/") && !i.getKey().endsWith(".txt")).collect(Collectors.toList());
 
         int rndIndex = rand.nextInt(0,list.size());
         int index = 0;
@@ -99,10 +99,12 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
     public void copyImageToDestinationFolder(String source,String destination ){
         ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withPrefix(source).withDelimiter("/");
         ListObjectsV2Result listing = s3Client.listObjectsV2(req);
+        var items = listing.getObjectSummaries().stream().filter(i ->!i.getKey().endsWith("/") && !i.getKey().endsWith(".txt")).collect(Collectors.toList());
         Random rand = new Random();
-        int rndIndex = rand.nextInt(1,listing.getObjectSummaries().size());
-        int index = 1;
-        for (S3ObjectSummary summary: listing.getObjectSummaries()) {
+        int rndIndex = rand.nextInt(0,listing.getObjectSummaries().size());
+        int index = 0;
+        for (S3ObjectSummary summary: items) {
+            logger.info("we get"+summary.getKey());
             if (!summary.getKey().endsWith("/")){
                 if (index == rndIndex){
                     s3Client.copyObject(bucket,summary.getKey(),bucket,destination + summary.getKey().split("/")[2]);
@@ -117,8 +119,9 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
     public void addEmployeesToCollection(){
         ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withPrefix(employeeFolder).withDelimiter("/");
         ListObjectsV2Result listing = s3Client.listObjectsV2(req);
+        var list = listing.getObjectSummaries().stream().filter(i ->!i.getKey().endsWith("/") && !i.getKey().endsWith(".txt")).collect(Collectors.toList());
 
-        for (S3ObjectSummary summary: listing.getObjectSummaries()) {
+        for (S3ObjectSummary summary: list) {
             if (!summary.getKey().endsWith("/")){
                 Image empImage = getImage(summary);
                 IndexFacesRequest employee= new IndexFacesRequest().withImage(empImage)
@@ -179,18 +182,19 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
         AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
         ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withPrefix(cameraLocation).withDelimiter("/");
         ListObjectsV2Result listing = s3Client.listObjectsV2(req);
+        var list = listing.getObjectSummaries().stream().filter(i ->!i.getKey().endsWith("/") && !i.getKey().endsWith(".txt")).collect(Collectors.toList());
 
         meterRegistry.timer("image_retrive_timer").record(imageloadTimer.stop(), TimeUnit.NANOSECONDS);
         var imageLoopTimer = imageS3Timer.start();
-        for (S3ObjectSummary summary: listing.getObjectSummaries()) {
-            if (!summary.getKey().endsWith("/")){
+        for (S3ObjectSummary summary: list) {
+            if (!summary.getKey().endsWith("/") || !summary.getKey().endsWith(".txt")){
 
                 ObjectMapper objectMapper = new ObjectMapper();
 
                 List<FaceMatch> faceImageMatches = getMatchingFaces(rekognitionClient, summary);
+                logger.info("gets here");
 
                 s3Client.deleteObject(bucket,summary.getKey());
-
                 if (faceImageMatches.isEmpty()){
                     var cameraScan = new CameraScanResponse();
                     cameraScan.setEmployee(false);
@@ -226,6 +230,7 @@ public class PictureScannerServiceImp implements PictureScannerService, Applicat
                 }
 
             }
+
         }
 
         meterRegistry.timer("Image_loop_timer").record(imageLoopTimer.stop(), TimeUnit.NANOSECONDS);
