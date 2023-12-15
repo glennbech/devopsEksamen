@@ -5,9 +5,6 @@ on:
     branches:
       - "*"
 
-    paths-ignore:
-      - '**/README.md'
-      - '**/BESVARELSE.md'
 env:
   IMAGE_CONTAINER: ${{ vars.IMAGE_CONTAINER }}
   BUCKET_NAME: ${{ vars.BUCKET_NAME }}
